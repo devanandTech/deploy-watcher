@@ -1,0 +1,269 @@
+/* ============================================================
+   TILE CARD
+   ============================================================ */
+.watcher-tile {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  position: relative;
+}
+
+.watcher-tile:hover {
+  border-color: rgba(109, 141, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Accent top bar */
+.tile-bar {
+  height: 3px;
+  background: var(--muted-dim);
+  transition: background 0.3s;
+}
+
+.watcher-tile--running  .tile-bar { background: var(--pending); }
+.watcher-tile--deployed .tile-bar { background: var(--live); }
+.watcher-tile--error    .tile-bar { background: var(--error); }
+
+/* Tile inner padding */
+.tile-header,
+.tile-url,
+.tile-chips,
+.tile-status,
+.tile-primary-action,
+.tile-details {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* ---- Header ---- */
+.tile-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 16px;
+  padding-bottom: 6px;
+}
+
+.tile-name {
+  font-weight: 700;
+  font-size: 14px;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+
+.tile-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.tile-icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  line-height: 1;
+}
+
+.tile-icon-btn--edit:hover {
+  background: rgba(109, 141, 255, 0.12);
+  border-color: rgba(109, 141, 255, 0.2);
+}
+
+.tile-icon-btn--delete:hover {
+  background: rgba(255, 107, 107, 0.1);
+  border-color: rgba(255, 107, 107, 0.2);
+}
+
+/* ---- URL ---- */
+.tile-url {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-bottom: 10px;
+}
+
+/* ---- Chips ---- */
+.tile-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding-bottom: 12px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--panel-border);
+  border-radius: 20px;
+  padding: 3px 9px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.chip code {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  color: var(--accent);
+  font-size: 10px;
+}
+
+/* ---- Status ---- */
+.tile-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex-direction: column;
+  padding-bottom: 12px;
+  min-height: 44px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.status-badge--idle    { background: rgba(123,132,160,0.12); color: var(--muted);   border-color: rgba(123,132,160,0.2); }
+.status-badge--pending { background: rgba(255,180,84,0.12);  color: var(--pending); border-color: rgba(255,180,84,0.2); }
+.status-badge--live    { background: rgba(53,211,153,0.12);  color: var(--live);    border-color: rgba(53,211,153,0.25); }
+.status-badge--error   { background: rgba(255,107,107,0.1);  color: var(--error);   border-color: rgba(255,107,107,0.2); }
+
+.tile-status-sub {
+  font-size: 11px;
+  color: var(--muted-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* ---- Primary action ---- */
+.tile-primary-action {
+  padding-bottom: 14px;
+}
+
+.tile-btn-full {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ---- Status dot ---- */
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--muted);
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+
+.dot--idle    { background: var(--muted); }
+.dot--live    { background: var(--live);  box-shadow: 0 0 6px rgba(53,211,153,0.5); }
+.dot--error   { background: var(--error); box-shadow: 0 0 6px rgba(255,107,107,0.4); }
+.dot--pending {
+  background: var(--pending);
+  animation: pulse 1.4s infinite;
+}
+
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0   rgba(255,180,84,0.6); }
+  70%  { box-shadow: 0 0 0 8px rgba(255,180,84,0); }
+  100% { box-shadow: 0 0 0 0   rgba(255,180,84,0); }
+}
+
+/* ---- Expandable log ---- */
+.tile-details {
+  border-top: 1px solid var(--panel-border);
+  padding-top: 10px;
+  padding-bottom: 12px;
+}
+
+.tile-details-summary {
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--muted);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  user-select: none;
+}
+
+.tile-details-summary::-webkit-details-marker { display: none; }
+
+.log-badge {
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 20px;
+  margin-left: 4px;
+}
+
+.tile-details-body {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.details-section {}
+
+.details-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted-dim);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.log-box, .parsed-box {
+  max-height: 110px;
+  overflow-y: auto;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 10.5px;
+  color: var(--muted);
+  background: var(--input-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 7px;
+  padding: 7px 9px;
+}
+
+.log-line { padding: 2px 0; line-height: 1.5; }
+.log-line--ok  { color: var(--live); }
+.log-line--err { color: var(--error); }
+.log-time { opacity: 0.55; }
+.log-empty { color: var(--muted-dim); font-style: italic; }
+
+.parsed-line { display: flex; gap: 5px; padding: 2px 0; }
+.parsed-key   { color: var(--accent); flex-shrink: 0; }
+.parsed-colon { color: var(--muted); }
+.parsed-value { color: var(--text); word-break: break-all; }
