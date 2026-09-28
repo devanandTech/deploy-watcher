@@ -137,9 +137,6 @@ export default function WatcherForm({ editingWatcher, onSave, onCancel, insideMo
             onChange={handleChange}
             required
           />
-          <div className="field-subhint">
-            ⚡ <strong>CORS Auto-Bypass:</strong> Frontend assets (e.g. S3/CloudFront) and APIs without CORS headers are automatically fetched via local proxy.
-          </div>
         </div>
 
         <div className="field-row">
@@ -182,13 +179,6 @@ export default function WatcherForm({ editingWatcher, onSave, onCancel, insideMo
           </div>
         </div>
 
-        {/* Multi-instance info alert */}
-        <div className="form-info-box">
-          <span className="form-info-box__icon">💡</span>
-          <div className="form-info-box__content">
-            <strong>Multi-Instance APIs:</strong> When multiple Docker containers run behind an AWS Load Balancer, tracking <code>version</code> or <code>buildTime</code> is recommended. <code>upTime</code> changes across containers because each has its own start timestamp.
-          </div>
-        </div>
 
         {/* Multi-instance settings */}
         <div className="field-row field-row--options">
