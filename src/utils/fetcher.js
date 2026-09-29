@@ -98,7 +98,23 @@ export async function fetchWithFallback(url, options = {}) {
     }
   }
 
-  // 2. Try Vite dev-server proxy (only available during local `npm run dev`)
+  // 2. Try Netlify Function proxy (/.netlify/functions/proxy) — works in Netlify production
+  try {
+    const netlifyProxyUrl = `/.netlify/functions/proxy?url=${encodeURIComponent(url)}`;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+    const res = await fetch(netlifyProxyUrl, { headers, signal: controller.signal });
+    clearTimeout(timeoutId);
+    const rawText = await res.text();
+    const ct = res.headers.get('content-type') || '';
+    // Guard: if response is HTML it means we hit a 404/catch-all page — skip
+    const isHtml = ct.includes('text/html') || rawText.trimStart().startsWith('<!');
+    if (res.ok && !isHtml) return { text: rawText, viaProxy: 'netlify' };
+  } catch {
+    // Not on Netlify or function not deployed — fall through
+  }
+
+  // 3. Try Vite dev-server proxy (only available during local `npm run dev`)
   try {
     const proxyUrl = `/api/proxy?url=${encodeURIComponent(url)}`;
     const controller = new AbortController();
@@ -106,8 +122,10 @@ export async function fetchWithFallback(url, options = {}) {
     const res = await fetch(proxyUrl, { headers, signal: controller.signal });
     clearTimeout(timeoutId);
     const rawText = await res.text();
-    // A 404 here means we're running in production (no Vite dev server) — fall through
-    if (res.ok) return { text: rawText, viaProxy: 'local' };
+    const ct = res.headers.get('content-type') || '';
+    // Guard: Netlify/any static host returns index.html (text/html, 200 OK) for unknown paths
+    const isHtml = ct.includes('text/html') || rawText.trimStart().startsWith('<!');
+    if (res.ok && !isHtml) return { text: rawText, viaProxy: 'local' };
   } catch {
     // Silently fall through to public proxies — expected in production
   }
